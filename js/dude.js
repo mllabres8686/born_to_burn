@@ -17,10 +17,10 @@ class Dude {
 	
 	setPosition(col, row){
 		let id ="r"+row+"c"+col
-		console.log(id)
+		// console.log(id)
 		let cell = map.getCell(id)
 		let cell_offset = cell.offset()
-		if(cell[0].classList.contains("free")){
+		if(cell[0].classList.contains("free") || cell[0].classList.contains("safe") || cell[0].classList.contains("subway") ){
 			this.setListening(false)
 			this.col = col
 			this.row = row

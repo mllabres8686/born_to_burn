@@ -1,6 +1,6 @@
-console.log("class dummy loaded")
+console.log("class police loaded")
 
-class Dummy {
+class Police {
 	"use strict"
 	id = null
 	row = 0
@@ -8,19 +8,34 @@ class Dummy {
 	posX = 0
 	posY = 0
 	htmlElement = null
-	movementTime = 200
+	movementTime = 50
 	life = false
 	loops = 0
 	max_life = 0
 	last_dir = null
 	target_cell = null
+	direction = null
 	self = this
 	
 	
-	constructor(id){
+	constructor(id, col, row){
 		this.htmlElement = $(id)
+		this.htmlElement.addClass("police")
 		
 		this.id = id
+		
+		
+		this.col = col
+		this.row = row
+		let cell_id ="r"+row+"c"+col
+		let cell_offset = map.getCell(cell_id).offset()
+		this.posX = cell_offset.top
+		this.posY = cell_offset.left
+		this.htmlElement.offset(cell_offset)
+		
+		this.movementTime = Math.floor(Math.random() * (300 - 150 + 1) + 150)		
+		
+		// setTimeout(this.live.bind(this), 555500)
 	}
 	
 	
@@ -35,57 +50,29 @@ class Dummy {
 	}
 	
 	move(cell_offset){
-		this.htmlElement.animate(cell_offset,this.movementTime)
+		this.htmlElement.animate(cell_offset, this.movementTime)
 		this.posX = cell_offset.top
 		this.posY = cell_offset.left
 	}
 	
-	setAsDummy(num){
-		this.htmlElement.addClass("dummy_"+num)
-		
-		// setTimeout(this.live.bind(this), 555500)
-		
-		this.movementTime = Math.floor(Math.random() * (1300 - 1200 + 1) + 1200)
-		
-		this.max_life = Math.floor(Math.random() * (1000 - 250 + 1) + 250)
-		
-		
-	}
-	
-	talk(){
-		console.log("hi")
-	}
-	
-	die(){
-		clearInterval(this.life);
-		console.log(this.id + " IS DEAD after " + this.max_life + " cycles!")
-		console.log(this)
-	}
-	
+
 	live(){
 		// let m = this
+		this.lightsOn()
 		this.life = window.setInterval(function() {
 			this.loops++
-			if (this.max_life <= this.loops) {
-				this.die()
+			
+			let dude_cell = {
+				row:dude.row,
+				col:dude.col
 			}
-			
-			
-			// let dir = Math.floor(Math.random() * (4 - 1 + 1) + 1)
-			// let id = "r"+this.row+"c"+this.col
+			map.setTargetCell(dude_cell)
+			this.smartMove()
+			// this.randomMove()
 
-			// if(map.getCell(id).hasClass('global_target')){
-				
-				// let new_objective = map.returnRandomFreeCell()
-				// map.setTargetCell(new_objective)
-			// }
-			// this.smartMove()
-			this.randomMove()
-			// this.autoMove(dir)
-			// this.talk()
 			
-			
-		}.bind(this),this.movementTime)
+
+		}.bind(this), this.movementTime +100)
 	}
 	
 	randomMove(){
@@ -208,55 +195,18 @@ class Dummy {
 		let row,col
 		col = this.col
 		row = this.row
-		// let avaiable_dirs = []
 		let recomended_dirs = []
+		let avaiable_dirs = []
 		let dir = null
+		let recomended = false
+		let current_cell = null	
 		
-		let avaiable_dirs = this.getAvailableCells(col, row)
+		//las celdas adyacentes no ocupadas
+		avaiable_dirs = this.getAvailableCells(col, row)
 		
-
-		let current_cell = map.getCell("r"+row+"c"+col)
+		//celda actual
+		current_cell = map.getCell("r"+row+"c"+col)
 		
-		//comprueba las celdas adyacentes y propone las que estan libres commo posibles direcciones
-		/*
-		let right_cell = null
-		let left_cell = null
-		let top_cell = null
-		let bottom_cell = null
-		
-		if(col<mapCols-1){
-			right_cell = map.getCell("r"+row+"c"+(col+1))
-			if(right_cell.hasClass("free")){
-				avaiable_dirs.push(1)
-			}
-		}
-		
-		if(col>0){
-			left_cell = map.getCell("r"+row+"c"+(col-1))
-			if(left_cell.hasClass("free")){
-				avaiable_dirs.push(4)
-			}
-		}
-		
-		if(row>0){
-			top_cell = map.getCell("r"+(row-1)+"c"+col)
-			if(top_cell.hasClass("free")){
-				avaiable_dirs.push(2)
-			}
-		}
-		
-		if(row<mapRows-1){
-			bottom_cell = map.getCell("r"+(row+1)+"c"+col)
-			if(bottom_cell != undefined){
-				if(bottom_cell.hasClass("free")){
-					avaiable_dirs.push(3)
-				}
-			}
-			
-		}
-		*/
-		
-			
 		//evita que dentro de una recta no vaya para atras
 		//eliminando la opcion de las posible direcciones
 		if(avaiable_dirs.length > 1){
@@ -289,29 +239,25 @@ class Dummy {
 		//direcciones recomendadas segun el target
 		if(col < map.target_cell.col){
 			recomended_dirs.push(1)
-			// console.log("right")
 		}	
 		if(col > map.target_cell.col){
 			recomended_dirs.push(4)
-			// console.log("left")
 		}	
 		if(row < map.target_cell.row){
 			recomended_dirs.push(3)
-			// console.log("down")
 		}
 		if(row > map.target_cell.row){
 			recomended_dirs.push(2)
-			// console.log("up")
 		}
 		
 		recomended_dirs.sort()
 		
-		let recomended = false
+		
 		for(let i = 0 ; i < recomended_dirs.length ; i++){
 			if(avaiable_dirs.includes(recomended_dirs[i]) && recomended == false){
 				dir = recomended_dirs[i]
 				recomended = true
-				// console.log("recomended " + dir)
+				console.log("recomended DIR" + dir)
 			}
 		}
 		
@@ -319,15 +265,19 @@ class Dummy {
 			// console.log("avaiable")
 			//opcion aleatoria dentro de las direcciones posibles
 			dir = avaiable_dirs[Math.floor(Math.random()*avaiable_dirs.length)];
+			console.log("random DIR " + dir)
 		}
 		
 		this.last_dir = dir
+		
+		this.htmlElement[0].classList.remove("right","left","up","down")
 		
 		switch(dir){
 		case 1:
 			if(this.col < mapCols-1){
 				col++
 				// console.log("right")
+				this.direction = "right"			
 			}
 			break;
 		
@@ -335,6 +285,7 @@ class Dummy {
 			if(this.row > 0){
 				row--
 				// console.log("up")
+				this.direction = "up"
 			}
 			break;
 		
@@ -342,6 +293,7 @@ class Dummy {
 			if(this.row < mapRows-1){
 				row++
 				// console.log("down")
+				this.direction = "down"
 			}
 			break;
 		
@@ -349,13 +301,57 @@ class Dummy {
 			if(this.col > 0){
 				col--
 				// console.log("left")
+				this.direction = "left"
+				
 			}				
 			break;
-			
 		}
+		this.htmlElement.addClass(this.direction)
+
 		this.setPosition(col,row)
 		let id = "r"+row+"c"+col
-		let dummy_cell = map.getCell(id)
-		$("#dummy_circle").offset(dummy_cell.offset())
+		let police_cell = map.getCell(id)
+		//la proxima posicion del poli
+		$("#dummy_circle").offset(police_cell.offset())
+		//luces del poli
+		// let lights_offset = $("#police_lights_1")
+		let lights_container = $("#police_lights_1").parent()
+		let negative_left_margin = lights_container.width()/2
+		let negative_top_margin = lights_container.height()/2
+		
+		let offset = police_cell.offset()
+		let definitive_top = offset.top - negative_top_margin + police_cell.height()/2
+		let definitive_left = offset.left - negative_left_margin + police_cell.width()/2
+		
+		
+		// $("#police_lights_1").animate(police_cell.offset(), this.movementTime)
+		$("#police_lights_1").parent().animate({top:definitive_top, left:definitive_left}, this.movementTime)
+		
+		
+		
+	}
+
+	lightsOn(){
+		console.log("LIGHTS ON!")
+		// window.setInterval(function() {	
+		// let lights = $("#police_lights_1")
+			// lights.animate(map.getCell("r"+this.row+"c"+this.col).offset(), this.movementTime)
+		// }.bind(this), this.movementTime/10)
+		
+		window.setInterval(function() {
+			
+			let lights = $("#police_lights_1")
+
+			let is_blue = lights[0].classList.contains("blue")
+			if(is_blue){
+				lights.addClass("red")
+				lights[0].classList.remove("blue")
+			}
+			else {
+				lights.addClass("blue")
+				lights[0].classList.remove("red")
+			}
+		}, 2000)
+		
 	}
 }

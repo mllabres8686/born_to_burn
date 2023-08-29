@@ -1,19 +1,23 @@
 *{
-	box-shadow:inset 0 0 1px 0 black;
+	/* box-shadow:inset 0 0 1px 0 black; */
+	font-size: 6px;
 }
 body{
 	margin:0;
 	padding:0;
+	display:flex;
+	justify-content:center;
+	/* font-size: 10px; */
 }
 
 #keyboard_listener{
-	width:30px;
-	height:30px;
+	width:2.5rem;
+	height:2.5rem;
 	background-color:light-gray;
 	border-radius:100%;
 	position:absolute;
-	top:10px;
-	right:10px;
+	top:0.75rem;
+	right:0.75rem;
 }
 #keyboard_listener.on{
 	background-color:lime;
@@ -21,19 +25,28 @@ body{
 #keyboard_listener.off{
 	background-color:red;
 }
+#map{
+	padding:8rem;
+	background-image: url(../img/gui/prado3.png);
+	background-position: 50%;
+	background-size: 144rem;
+	display:inline-block;
+	opacity:0.9;
+}
 #map .row{
 	display: flex;
 	width:fit-content;
 }
 
 #map .row .cell{
-	width:26px;
-	height:26px
+	width:2.25rem;
+	height:2.25rem;
+	opacity:0.8
 }
 #circle{
 	position:absolute;
-	width:35px;
-	height:35px;
+	width:3rem;
+	height:3rem;
 	/* background-color:transparent; */
 	background-color:ffcc00ab;
 	border-radius:100%;
@@ -42,32 +55,50 @@ body{
 }
 #dummy_circle{
 	position:absolute;
-	width:25px;
-	height:25px;
+	width:2rem;
+	height:2rem;
 	background-color:transparent;
+	/* background:radial-gradient(#e66465, #9198e5); */
 	border-radius:100%;
 	border:1px solid pink;
 	z-index:4;
 }
 
-.free {
-	background-color: #007b00;
-	box-shadow: inset 0 0 5px 1px #2af200;
+
+.safe {
+	background-color: #00157b;
+    box-shadow: inset 0 0 5px 1px #0029f2;
 }
-.occuped {
+.burn {
+	background-color: #dfda3b;
+    box-shadow: inset 0 0 5px 2px #fff700;
+}
+.subway {
+	background-color: #741e84;
+    box-shadow: inset 0 0 5px 2px #2303297d;
+}
+.police_station {
 	background-color: #841e1e;
 	box-shadow: inset 0 0 5px 2px #ff10106e;
 }
-.safe {
-	background-color:blue;
+.free {
+	background-color: #414141;
+    box-shadow: inset 0 0 5px 2px #1616167d;
 }
+.occuped {
+	background-color: #007b00;
+	box-shadow: inset 0 0 5px 1px #2af200;
+}
+/* .safe { */
+	/* background-color:blue; */
+/* } */
 
 #dude{
 	background-image: url(../img/heavy.png);
 	background-position: center 10%;
 	background-size: cover;
-	height: 25px;
-	width: 25px;
+	height:2rem;
+	width: 2rem;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -78,8 +109,8 @@ body{
 	background-image: url(../img/dummy_1.png);
 	background-position: center 10%;
 	background-size: cover;
-	height: 25px;
-	width: 25px;
+	height: 2rem;
+	width: 2rem;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -90,8 +121,8 @@ body{
 	background-image: url(../img/dummy_2.png);
 	background-position: center 10%;
 	background-size: cover;
-	height: 25px;
-	width: 25px;
+	height: 2rem;
+	width: 2rem;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -102,10 +133,87 @@ body{
 	background-image: url(../img/dummy_3.png);
 	background-position: center 10%;
 	background-size: cover;
-	height: 25px;
-	width: 25px;
+	height: 2rem;
+	width: 2rem;
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index:1;
 }
+
+
+.police{
+	background-image: url(../img/PoliceCar.png);
+	background-position: center 10%;
+	background-size: cover;
+	height: 2.2rem;
+	width: 2.2rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:1;
+	
+}
+.police_light_container{
+	position:absolute;
+	width:20rem;
+	height:20rem;
+	/* border: 2px solid yellow; */
+	display:flex;
+	flex-direction:column;
+	justify-content: center;
+	text-align:center;
+	align-items:center;
+	z-index:2;
+}
+.police_light{
+	position:relative;
+	width:2rem;
+	height:2rem;
+	animation: blink 2s infinite;
+	animation-fill-mode: both;
+	border-radius:100%;
+	z-index:3;
+}
+.police_light.red{
+	background-color: red;
+	/* background: radial-gradient(transparent 0%, transparent 10%, rgba(255, 0, 0, 0.8) 68%, rgba(255, 0, 0, .9) 100%); */
+	background: radial-gradient(transparent 0%, rgba(255, 0, 0, 0.2) 10%, rgba(255, 0, 0, 0.8) 40%, transparent 92%, transparent 100%);
+}
+.police_light.blue{
+	background-color: blue;
+	/* background: radial-gradient(transparent 0%, transparent 10%, rgba(0, 0, 255, 0.8) 68%, rgba(0, 255, 0, .9) 100%); */
+	background: radial-gradient(transparent 0%, rgba(0, 0, 255, 0.2) 10%, rgba(0, 0, 255, 0.8) 40%, transparent 92%, transparent 100%);
+}
+
+.police.up{
+	background-image: url(../img/polis/urbanaUp.png);
+}
+.police.down{
+	background-image: url(../img/polis/urbanaDown.png);
+}
+.police.left{
+	background-image: url(../img/polis/urbanaLeft.png);
+}
+.police.right{
+	background-image: url(../img/polis/urbanaRight.png);
+}
+
+@keyframes blink{
+	0%{opacity: 0;width:2rem;height:2rem;}
+	
+	10%{opacity: 0.5; width:6rem;height:6rem;}
+	20%{opacity: 1;width:9rem;height:9rem;}	
+	30%{opacity: 1;width:12rem;height:12rem;}
+	40%{opacity: 0.5;width:16rem;height:16rem;}
+	
+	50%{opacity: 0;width:20rem;height:20rem;}
+	
+	60%{opacity: 0.5;width:16rem;height:16rem;}
+	70%{opacity: 1;width:12rem;height:12rem;}
+	80%{opacity: 1;width:9rem;height:9rem;}	
+	90%{opacity: 0.5;width:6rem;height:6rem;}
+	
+	100%{opacity: 0;width:2rem;height:2rem;}
+}
+

@@ -22,24 +22,37 @@ class Map {
 				// console.log(map_cells[r][c][0])
 				if(map_cells[r][c][0] == 0){
 					calculated_class = "free"
-				} else {
+				} 
+				else if(map_cells[r][c][0] == 1){
+					calculated_class = "safe"
+				}
+				else if(map_cells[r][c][0] == 2){
+					calculated_class = "subway"
+				}
+				else if(map_cells[r][c][0] == 3){
+					calculated_class = "burn"
+				}
+				else if(map_cells[r][c][0] == 4){
+					calculated_class = "police_station"
+				}
+				else {
 					calculated_class = "occuped"
 				}
 				this.htmlElement.find("#row_"+r).append("<div id='r"+r+"c"+c+"' class='cell "+ calculated_class +"'></div>")
 				this.cells.push($('#map #r'+r+'c'+c))
 				
 				
-				document.getElementById("r"+r+"c"+c).addEventListener("click", function(){
+				// document.getElementById("r"+r+"c"+c).addEventListener("click", function(){
 					// console.log(this.id)
-					if(this.class == "free"){
-						this.class = "occuped"
-					} else if(this.class == "occuped"){
-						this.class = "safe"
-					} else {
-						this.class = "free"
-					}
-					$("#"+this.id).removeClass("free occuped safe").addClass(this.class)
-				});
+					// if(this.class == "free"){
+						// this.class = "occuped"
+					// } else if(this.class == "occuped"){
+						// this.class = "safe"
+					// } else {
+						// this.class = "free"
+					// }
+					// $("#"+this.id).removeClass("free occuped safe").addClass(this.class)
+				// });
 			}
 		}
 		
@@ -47,6 +60,7 @@ class Map {
 		
 	}
 	
+	/**Return a cell filtered by ID */
 	getCell(id){
 		return this.cells.filter(cell => cell[0].id == id)[0]
 	}
@@ -58,7 +72,7 @@ class Map {
 		target_cell.addClass("global_target")
 		
 		$("#circle").offset(target_cell.offset())
-		$("#circle").offset({top:(target_cell.offset().top-7),left:(target_cell.offset().left-7)})
+		$("#circle").offset({top:(target_cell.offset().top-7),left:(target_cell.offset().left-6)})
 		
 		this.target_cell = cell
 	}
