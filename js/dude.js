@@ -7,12 +7,13 @@ class Dude {
 	posY = 0
 	htmlElement = null
 	listening = true
-	movementTime = 200
+	movementTime = 100
 	live
 	loops
 	
 	constructor(id){
 		this.htmlElement = $(id)
+		console.log("player is set!")
 	}
 	
 	setPosition(col, row){

@@ -15,15 +15,18 @@ class Police {
 	last_dir = null
 	target_cell = null
 	direction = null
+	lights = null
 	self = this
 	
 	
-	constructor(id, col, row){
-		this.htmlElement = $(id)
+	constructor(num, col, row){
+		this.htmlElement = $("#police_" + num)
 		this.htmlElement.addClass("police")
 		
-		this.id = id
 		
+		this.id = "#police_" + num
+		
+		this.lights = $("#police_lights_"+num)
 		
 		this.col = col
 		this.row = row
@@ -33,7 +36,8 @@ class Police {
 		this.posY = cell_offset.left
 		this.htmlElement.offset(cell_offset)
 		
-		this.movementTime = Math.floor(Math.random() * (300 - 150 + 1) + 150)		
+		// this.movementTime = Math.floor(Math.random() * (300 - 150 + 1) + 150)
+		this.movementTime = Math.floor(Math.random() * (600 - 400 + 1) + 400)
 		
 		// setTimeout(this.live.bind(this), 555500)
 	}
@@ -257,7 +261,7 @@ class Police {
 			if(avaiable_dirs.includes(recomended_dirs[i]) && recomended == false){
 				dir = recomended_dirs[i]
 				recomended = true
-				console.log("recomended DIR" + dir)
+				// console.log("recomended DIR" + dir)
 			}
 		}
 		
@@ -265,7 +269,7 @@ class Police {
 			// console.log("avaiable")
 			//opcion aleatoria dentro de las direcciones posibles
 			dir = avaiable_dirs[Math.floor(Math.random()*avaiable_dirs.length)];
-			console.log("random DIR " + dir)
+			// console.log("random DIR " + dir)
 		}
 		
 		this.last_dir = dir
@@ -312,10 +316,9 @@ class Police {
 		let id = "r"+row+"c"+col
 		let police_cell = map.getCell(id)
 		//la proxima posicion del poli
-		$("#dummy_circle").offset(police_cell.offset())
+		// $("#dummy_circle").offset(police_cell.offset())
 		//luces del poli
-		// let lights_offset = $("#police_lights_1")
-		let lights_container = $("#police_lights_1").parent()
+		let lights_container = this.lights.parent()
 		let negative_left_margin = lights_container.width()/2
 		let negative_top_margin = lights_container.height()/2
 		
@@ -324,34 +327,28 @@ class Police {
 		let definitive_left = offset.left - negative_left_margin + police_cell.width()/2
 		
 		
-		// $("#police_lights_1").animate(police_cell.offset(), this.movementTime)
-		$("#police_lights_1").parent().animate({top:definitive_top, left:definitive_left}, this.movementTime)
+		this.lights.parent().animate({top:definitive_top, left:definitive_left}, this.movementTime)
 		
 		
 		
 	}
 
 	lightsOn(){
-		console.log("LIGHTS ON!")
-		// window.setInterval(function() {	
-		// let lights = $("#police_lights_1")
-			// lights.animate(map.getCell("r"+this.row+"c"+this.col).offset(), this.movementTime)
-		// }.bind(this), this.movementTime/10)
-		
 		window.setInterval(function() {
 			
-			let lights = $("#police_lights_1")
+			// let lights = $("#police_lights_"+this.)
+			// let lights = $("#police_lights_"+this.)
 
-			let is_blue = lights[0].classList.contains("blue")
+			let is_blue = this.lights[0].classList.contains("blue")
 			if(is_blue){
-				lights.addClass("red")
-				lights[0].classList.remove("blue")
+				this.lights.addClass("red")
+				this.lights[0].classList.remove("blue")
 			}
 			else {
-				lights.addClass("blue")
-				lights[0].classList.remove("red")
+				this.lights.addClass("blue")
+				this.lights[0].classList.remove("red")
 			}
-		}, 2000)
+		}.bind(this), 2000)
 		
 	}
 }

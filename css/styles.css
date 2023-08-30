@@ -1,5 +1,5 @@
 *{
-	/* box-shadow:inset 0 0 1px 0 black; */
+	box-shadow:inset 0 0 1px 0 black;
 	font-size: 6px;
 }
 body{
@@ -41,7 +41,7 @@ body{
 #map .row .cell{
 	width:2.25rem;
 	height:2.25rem;
-	opacity:0.8
+	opacity:0
 }
 #circle{
 	position:absolute;
@@ -106,9 +106,9 @@ body{
 }
 
 .dummy_1{
-	background-image: url(../img/dummy_1.png);
-	background-position: center 10%;
+	background-position: 100% center;
 	background-size: cover;
+	background-repeat: no-repeat;
 	height: 2rem;
 	width: 2rem;
 	position: absolute;
@@ -116,11 +116,15 @@ body{
 	left: 0;
 	z-index:1;
 }
+.dummy_1.up{background-image: url(../img/dummies/alone1B.png);}
+.dummy_1.down{background-image: url(../img/dummies/alone1.png);}
+.dummy_1.left{background-image: url(../img/dummies/alone1L.png);}
+.dummy_1.right{background-image: url(../img/dummies/alone1R.png);}
 
 .dummy_2{
-	background-image: url(../img/dummy_2.png);
-	background-position: center 10%;
+	background-position: 100% center;
 	background-size: cover;
+	background-repeat: no-repeat;
 	height: 2rem;
 	width: 2rem;
 	position: absolute;
@@ -128,11 +132,15 @@ body{
 	left: 0;
 	z-index:1;
 }
+.dummy_2.up{background-image: url(../img/dummies/alone2B.png);}
+.dummy_2.down{background-image: url(../img/dummies/alone2.png);}
+.dummy_2.left{background-image: url(../img/dummies/alone2L.png);}
+.dummy_2.right{background-image: url(../img/dummies/alone2R.png);}
 
 .dummy_3{
-	background-image: url(../img/dummy_3.png);
-	background-position: center 10%;
+	background-position: 100% center;
 	background-size: cover;
+	background-repeat: no-repeat;
 	height: 2rem;
 	width: 2rem;
 	position: absolute;
@@ -140,6 +148,42 @@ body{
 	left: 0;
 	z-index:1;
 }
+.dummy_3.up{background-image: url(../img/dummies/alone3B.png);}
+.dummy_3.down{background-image: url(../img/dummies/alone3.png);}
+.dummy_3.left{background-image: url(../img/dummies/alone3L.png);}
+.dummy_3.right{background-image: url(../img/dummies/alone3R.png);}
+
+.dummy_4{
+	background-position: 100% center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 2rem;
+	width: 2rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:1;
+}
+.dummy_4.up{background-image: url(../img/dummies/alone4B.png);}
+.dummy_4.down{background-image: url(../img/dummies/alone4.png);}
+.dummy_4.left{background-image: url(../img/dummies/alone4L.png);}
+.dummy_4.right{background-image: url(../img/dummies/alone4R.png);}
+
+.dummy_5{
+	background-position: 100% center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 2rem;
+	width: 2rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:1;
+}
+.dummy_5.up{background-image: url(../img/dummies/alone5B.png);}
+.dummy_5.down{background-image: url(../img/dummies/alone5.png);}
+.dummy_5.left{background-image: url(../img/dummies/alone5L.png);}
+.dummy_5.right{background-image: url(../img/dummies/alone5R.png);}
 
 
 .police{
@@ -158,7 +202,6 @@ body{
 	position:absolute;
 	width:20rem;
 	height:20rem;
-	/* border: 2px solid yellow; */
 	display:flex;
 	flex-direction:column;
 	justify-content: center;
@@ -177,12 +220,10 @@ body{
 }
 .police_light.red{
 	background-color: red;
-	/* background: radial-gradient(transparent 0%, transparent 10%, rgba(255, 0, 0, 0.8) 68%, rgba(255, 0, 0, .9) 100%); */
 	background: radial-gradient(transparent 0%, rgba(255, 0, 0, 0.2) 10%, rgba(255, 0, 0, 0.8) 40%, transparent 92%, transparent 100%);
 }
 .police_light.blue{
 	background-color: blue;
-	/* background: radial-gradient(transparent 0%, transparent 10%, rgba(0, 0, 255, 0.8) 68%, rgba(0, 255, 0, .9) 100%); */
 	background: radial-gradient(transparent 0%, rgba(0, 0, 255, 0.2) 10%, rgba(0, 0, 255, 0.8) 40%, transparent 92%, transparent 100%);
 }
 

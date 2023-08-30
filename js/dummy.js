@@ -1,5 +1,11 @@
 console.log("class dummy loaded")
 
+// dummy 1 = de rojo
+// dummy 2 = de negro
+// dummy 3 = abuela
+// dummy 4 = deportista
+// dummy 5 = ravera
+
 class Dummy {
 	"use strict"
 	id = null
@@ -13,7 +19,10 @@ class Dummy {
 	loops = 0
 	max_life = 0
 	last_dir = null
+	direction = null
 	target_cell = null
+	current_animation_frame = 0
+	animation = null
 	self = this
 	
 	
@@ -41,13 +50,27 @@ class Dummy {
 	}
 	
 	setAsDummy(num){
-		this.htmlElement.addClass("dummy_"+num)
+		this.htmlElement.addClass("dummy_"+num)		
 		
-		// setTimeout(this.live.bind(this), 555500)
-		
-		this.movementTime = Math.floor(Math.random() * (1300 - 1200 + 1) + 1200)
+		// this.movementTime = Math.floor(Math.random() * (1300 - 1200 + 1) + 1200)
 		
 		this.max_life = Math.floor(Math.random() * (1000 - 250 + 1) + 250)
+		
+		if(num == 5){
+			this.movementTime = 1200
+		}
+		if(num == 4){
+			this.movementTime = 700
+		}
+		if(num == 3){
+			this.movementTime = 2000
+		}
+		if(num == 2){
+			this.movementTime = 1000
+		}
+		if(num == 1){
+			this.movementTime = 1000
+		}
 		
 		
 	}
@@ -58,12 +81,14 @@ class Dummy {
 	
 	die(){
 		clearInterval(this.life);
+		clearInterval(this.movementAnimation);
 		console.log(this.id + " IS DEAD after " + this.max_life + " cycles!")
 		console.log(this)
 	}
 	
 	live(){
 		// let m = this
+		this.movementAnimation()
 		this.life = window.setInterval(function() {
 			this.loops++
 			if (this.max_life <= this.loops) {
@@ -133,34 +158,69 @@ class Dummy {
 		let row,col
 		col = this.col
 		row = this.row
-		
+		this.htmlElement[0].classList.remove("right","left","up","down")
+
 		switch(dir){
 		case 1:
 			if(this.col < mapCols-1){
 				col++
+				this.direction = "right"
 			}
 			break;
 		
 		case 2:
 			if(this.row > 0){
 				row--
+				this.direction = "up"
 			}
 			break;
 		
 		case 3:
 			if(this.row < mapRows-1){
 				row++
+				this.direction = "down"
 			}
 			break;
 		
 		case 4:
 			if(this.col > 0){
 				col--
+				this.direction = "left"
 			}				
 			break;
 			
 		}
+		this.htmlElement.addClass(this.direction)
+		
 		this.setPosition(col,row)
+	}
+	
+	movementAnimation(){
+		
+		let animation_frame = null
+		this.animation = window.setInterval(function() {	
+			
+			this.current_animation_frame ++
+			if (this.current_animation_frame > 3){
+				this.current_animation_frame = 0
+			}
+						
+			switch(this.current_animation_frame){
+				case 0:		
+					animation_frame = "0% center"
+					break;
+				case 1:
+					animation_frame = "35% center"
+					break;
+				case 2:
+					animation_frame = "65% center"
+					break;
+				case 3:
+					animation_frame = "104% center"
+					break;
+			}
+			this.htmlElement.css("background-position", animation_frame)
+		}.bind(this),this.movementTime/4)
 	}
 	
 	getAvailableCells(col, row){
@@ -356,6 +416,6 @@ class Dummy {
 		this.setPosition(col,row)
 		let id = "r"+row+"c"+col
 		let dummy_cell = map.getCell(id)
-		$("#dummy_circle").offset(dummy_cell.offset())
+		// $("#dummy_circle").offset(dummy_cell.offset())
 	}
 }

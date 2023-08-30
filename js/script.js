@@ -107,36 +107,38 @@ var updateZoom = function(zoom) {
    $('body').css({ zoom: zoomLevel, '-moz-transform': 'scale(' + zoomLevel + ')' });
 }
 
-$(document).ready(function() {
-	map = new Map("#map", mapRows, mapCols)
-	
-	let zoomInterval = window.setInterval(function() {
-		 
-		updateZoom(0.02)
-		console.log("zoomLevel", zoomLevel)
-		if(zoomLevel > 1.15){
-			clearInterval(zoomInterval);
-		}
-		 
-	}, 25)
-	
-	// target_cell = {
-		// row:13,
-		// col:9
-	// }
-	
-	// map.setTargetCell(target_cell)
-	
+
+var setPlayer = function(){
+	//PLAYER
 	dude = new Dude("#dude")	
 	dude.setPosition(0,31)
-	
-	$("body").append("<div id='police_1'></div>")
-	$("body").append("<div class='police_light_container'><div id='police_lights_1' class='police_light'></div></div>")
-	let police = new Police("#police_1", 31, 31)
-	// police.setPosition(31,31)
-	police.live()
-	
-	for(let i = 1 ; i < 12 ; i++){
+}
+
+var setPolice = function(){
+	//POLIS
+	for(let i = 1 ; i <= 2 ; i++){	
+		$("body").append("<div id='police_"+i+"'></div>")
+		$("body").append("<div class='police_light_container'><div id='police_lights_"+i+"' class='police_light'></div></div>")
+		let police = new Police(i, 20, 5)
+		police.live()
+	}
+	for(let i = 3 ; i <= 4 ; i++){	
+		$("body").append("<div id='police_"+i+"'></div>")
+		$("body").append("<div class='police_light_container'><div id='police_lights_"+i+"' class='police_light'></div></div>")
+		let police = new Police(i, 2, 15)
+		police.live()
+	}
+	for(let i = 5 ; i <= 6 ; i++){	
+		$("body").append("<div id='police_"+i+"'></div>")
+		$("body").append("<div class='police_light_container'><div id='police_lights_"+i+"' class='police_light'></div></div>")
+		let police = new Police(i, 25, 26)
+		police.live()
+	}
+}
+
+var setDummies = function(){
+	//DUMMIES
+	for(let i = 1 ; i < 20 ; i++){
 		let free_cell = false
 		let Y, X
 		while (free_cell == false) {
@@ -149,8 +151,8 @@ $(document).ready(function() {
 		}
 		
 		let resto
-		if(i > 3){
-			resto = i % 3 +1; 
+		if(i > 5){
+			resto = i % 5 +1; 
 		} else {
 			resto = i
 		}
@@ -160,10 +162,36 @@ $(document).ready(function() {
 		let dummy = new Dummy("#dummy_"+i)
 		dummy.setAsDummy(resto)
 		dummy.setPosition(X,Y)
-		// dummy.setTargetCell(target_cell)
 		dummies.push(dummy)
 		dummy.live()
 	}
+}
+
+$(document).ready(function() {
+	map = new Map("#map", mapRows, mapCols)
+	
+	console.log("zoomenado el mapa")
+	let zoomInterval = window.setInterval(function() {
+		 
+		updateZoom(0.02)
+		if(zoomLevel > 1.25){
+			clearInterval(zoomInterval);
+		}
+		 
+	}, 25)
+	
+	setTimeout(()=>{
+		setPlayer()
+		setPolice()
+		setDummies()
+		console.log("ubicando items")
+	},2500)
+	
+	
+	
+	
+	
+	
 });
 
 $(document).on('keypress', async function (e) {
