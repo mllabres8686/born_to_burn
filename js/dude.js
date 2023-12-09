@@ -10,6 +10,7 @@ class Dude {
 	movementTime = 100
 	live
 	loops
+	followers = []
 	
 	constructor(id){
 		this.htmlElement = $(id)
@@ -17,6 +18,7 @@ class Dude {
 	}
 	
 	setPosition(col, row){
+		console.log("setting position ", col, row)
 		let id ="r"+row+"c"+col
 		// console.log(id)
 		let cell = map.getCell(id)

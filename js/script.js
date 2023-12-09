@@ -34,6 +34,8 @@ var map_cells_OLD = [
 [[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[ ],[0],[0],[0],[0],[0],[0],[ ],[0],[0],[0],[0],[0]]
 ]
 
+var myGamepad = null
+
 var map_cells = [
 [[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[ ],[ ],[ ],[ ],[ ],[ ],[0],[0],[0],[ ],[ ],[ ],[ ],[0],[0],[0]],
 [[0],[ ],[ ],[0],[3],[3],[3],[3],[0],[ ],[ ],[0],[3],[3],[3],[0],[ ],[ ],[ ],[ ],[ ],[ ],[0],[3],[0],[ ],[ ],[ ],[ ],[0],[3],[0]],
@@ -50,8 +52,8 @@ var map_cells = [
 [[0],[0],[0],[0],[3],[0],[0],[0],[0],[0],[ ],[ ],[ ],[ ],[ ],[0],[ ],[ ],[ ],[ ],[ ],[0],[3],[3],[3],[3],[3],[0],[ ],[ ],[ ],[0]],
 [[0],[4],[4],[0],[0],[0],[ ],[ ],[ ],[0],[ ],[ ],[ ],[ ],[ ],[0],[ ],[ ],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[ ],[ ],[3],[0]],
 [[0],[4],[4],[0],[3],[0],[0],[0],[0],[0],[ ],[ ],[ ],[ ],[3],[0],[0],[0],[0],[ ],[ ],[ ],[ ],[ ],[ ],[0],[ ],[ ],[0],[0],[0],[0]],
-[[0],[0],[0],[0],[0],[0],[3],[3],[3],[0],[0],[0],[0],[0],[0],[0],[3],[3],[0],[ ],[ ],[ ],[ ],[ ],[ ],[0],[ ],[ ],[0],[ ],[ ],[0]],
-[[0],[ ],[ ],[ ],[ ],[0],[3],[3],[3],[0],[ ],[ ],[3],[3],[3],[0],[3],[3],[0],[0],[0],[0],[0],[ ],[ ],[0],[0],[0],[0],[0],[0],[0]],
+[[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[3],[3],[0],[ ],[ ],[ ],[ ],[ ],[ ],[0],[ ],[ ],[0],[ ],[ ],[0]],
+[[0],[ ],[ ],[ ],[ ],[0],[0],[0],[0],[0],[ ],[ ],[3],[3],[3],[0],[3],[3],[0],[0],[0],[0],[0],[ ],[ ],[0],[0],[0],[0],[0],[0],[0]],
 [[0],[ ],[ ],[ ],[ ],[0],[3],[3],[3],[0],[ ],[ ],[3],[0],[0],[0],[0],[0],[0],[2],[ ],[ ],[0],[0],[0],[0],[3],[3],[0],[ ],[ ],[0]],
 [[0],[ ],[ ],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[ ],[ ],[0],[ ],[ ],[ ],[ ],[ ],[0],[3],[ ],[3],[0],[0],[0],[ ],[ ],[0]],
 [[0],[0],[0],[0],[2],[ ],[ ],[0],[ ],[ ],[0],[ ],[ ],[3],[ ],[ ],[0],[ ],[ ],[ ],[0],[0],[0],[0],[0],[0],[0],[3],[0],[0],[0],[0]],
@@ -76,6 +78,8 @@ var startRow = 0
 var startCol = 0
 
 var dummies = []
+var polices = []
+
 
 function require(script) {
     $.ajax({
@@ -92,6 +96,7 @@ function require(script) {
 }
 
 require('./js/test.js')
+require('./js/gamepad.js')
 require('./js/map.js')
 require('./js/dude.js')
 require('./js/dummy.js')
@@ -104,9 +109,38 @@ zoomLevel = 0.5;
 
 var updateZoom = function(zoom) {
    zoomLevel += zoom;
-   $('body').css({ zoom: zoomLevel, '-moz-transform': 'scale(' + zoomLevel + ')' });
+   
+   $("html").css("fontSize", (6 * zoomLevel)+"px");
+   $("#zoom-level").text(zoomLevel)
+   // document.getElementById('r31c0').scrollIntoView({
+		// behavior: 'instant',
+		// block: 'center',
+		// inline: 'center'
+	// });
 }
 
+var setZoom = function(zoom) {
+   zoomLevel = zoom;
+   $("html").css("fontSize", (6 * zoomLevel)+"px");
+   $("#zoom-level").text(zoomLevel);
+}
+
+var initialZoom = async function(max_zoom){
+	let zoomInterval = await window.setInterval(function() {
+		 
+		updateZoom(0.025);
+		if(zoomLevel > max_zoom){
+			setZoom(max_zoom)
+			clearInterval(zoomInterval);
+		}
+		 
+	}, 25)
+}
+
+var setGamepad = function(){
+	console.log("gamepad object creation")
+	myGamepad = new Gamepad("gamepad")
+}
 
 var setPlayer = function(){
 	//PLAYER
@@ -114,31 +148,36 @@ var setPlayer = function(){
 	dude.setPosition(0,31)
 }
 
-var setPolice = function(){
+var setPolice = function(max_police){
 	//POLIS
-	for(let i = 1 ; i <= 2 ; i++){	
+	
+	for(let i = 1 ; i <= max_police ; i++){	
 		$("body").append("<div id='police_"+i+"'></div>")
 		$("body").append("<div class='police_light_container'><div id='police_lights_"+i+"' class='police_light'></div></div>")
-		let police = new Police(i, 20, 5)
+		console.log(i)
+		let police = null
+		if(i % 3 == 1 || i == 1){
+			console.log("police 1")
+			police = new Police(i, 20, 5)
+		}
+		if(i % 3 == 2 || i == 2){
+			console.log("police 2")
+			police = new Police(i, 2, 15)
+		}
+		if(i % 3 == 0){
+			console.log("police 3")
+			police = new Police(i, 25, 26)
+		}
+		
 		police.live()
+		polices.push(police)
 	}
-	for(let i = 3 ; i <= 4 ; i++){	
-		$("body").append("<div id='police_"+i+"'></div>")
-		$("body").append("<div class='police_light_container'><div id='police_lights_"+i+"' class='police_light'></div></div>")
-		let police = new Police(i, 2, 15)
-		police.live()
-	}
-	for(let i = 5 ; i <= 6 ; i++){	
-		$("body").append("<div id='police_"+i+"'></div>")
-		$("body").append("<div class='police_light_container'><div id='police_lights_"+i+"' class='police_light'></div></div>")
-		let police = new Police(i, 25, 26)
-		police.live()
-	}
+	
 }
 
-var setDummies = function(){
+var setDummies = function(max_dummies){
 	//DUMMIES
-	for(let i = 1 ; i < 20 ; i++){
+	for(let i = 1 ; i < max_dummies ; i++){
 		let free_cell = false
 		let Y, X
 		while (free_cell == false) {
@@ -167,68 +206,175 @@ var setDummies = function(){
 	}
 }
 
-$(document).ready(function() {
+var printGameVars = function(max_zoom){
+	let printInterval = window.setInterval(function() {
+		// console.log("printing")
+		$("#followers_recount").html(dude.followers.length)
+		$("#dude_position_y").html(dude.row)
+		$("#dude_position_x").html(dude.col)
+		// let cop_1 = polices[0]
+		// $("#cop_position_y").html(cop_1.row)
+		// $("#cop_position_x").html(cop_1.col)
+		// $("#cop_velocity").html(cop_1.movementTime)
+		// console.log(navigator.getGamepads())
+	},50)
+	
+}
+
+window.addEventListener('gamepadconnected', (event) => {
+	console.log("gamepad connected event")
+	myGamepad.setGamepad(event.gamepad.index)
+})
+
+
+
+$(document).ready(async function() {
 	map = new Map("#map", mapRows, mapCols)
+	const zoom_in = document.querySelector('#zoomin');
+	const zoom_out = document.querySelector('#zoomout');
 	
 	console.log("zoomenado el mapa")
-	let zoomInterval = window.setInterval(function() {
-		 
-		updateZoom(0.02)
-		if(zoomLevel > 1.25){
-			clearInterval(zoomInterval);
-		}
-		 
-	}, 25)
+	await initialZoom(2.725)
 	
-	setTimeout(()=>{
+	setGamepad()
+	
+	
+	await setTimeout(()=>{
 		setPlayer()
-		setPolice()
-		setDummies()
-		console.log("ubicando items")
+		// setPolice(1)
+		// setDummies(6)
+		let interval = window.setInterval(printGameVars(), 15000);
 	},2500)
 	
+	setTimeout(() => {
+		$("#sagrada").addClass("animate")
+	}, 3000)
 	
 	
-	
-	
-	
+	zoom_in.addEventListener('click', function() {
+		console.log("zoom in")
+		zoomIn()
+	})
+	zoom_out.addEventListener('click', function() {
+		console.log("zoom out")
+		zoomOut()
+	})
 });
 
-$(document).on('keypress', async function (e) {
-	let is_free = false
+
+let gamepadListener = window.setInterval(function(){
+	// console.log("COL " + myGamepad.axes)
+	if(myGamepad.axes != null){
+		let dude_axes = [Math.round(myGamepad.axes[0]), Math.round(myGamepad.axes[1])]
+
+		moveDude(dude_axes)
+		
+		zoomByStick(Math.round(myGamepad.axes[3]))
+		
+	}
+}.bind(myGamepad), 100);
+
+function zoomByStick(rightY){
+	console.log(rightY)
+	if(rightY == 1){
+		zoomIn()
+	}
+	if(rightY == -1){
+		zoomOut()
+	}
+	document.getElementById('dude').scrollIntoView({
+		behavior: 'smooth',
+		block: 'center',
+		inline: 'center'
+	});
+}
+
+function zoomIn(){
+	updateZoom(0.025)
+	
+};
+
+function zoomOut(){
+	updateZoom(-0.025)
+};
+
+function moveDude(axes){
+	let moved = false
 	let dudeRow = dude.row
 	let dudeCol = dude.col
-	if(dude.listening){
-		
-		switch(e.which){
-			case 40:
-			case 115:
-				// console.log("down")
-				if(dudeRow < mapRows-1 ) dudeRow++
-				
-				break;
-			case 37:
-			case 97:
-				// console.log("left")
+	if( dude.listening && ( axes[0] != 0 || axes[1] != 0 ) ){
+		console.log("dude is listening")
+			
+			if( !moved && axes[1] == 1 ){
+				console.log("down")
+				if(dudeRow < mapRows-1 ) dudeRow++	
+				moved = true
+			}
+			
+			if(  !moved && axes[0] == -1 ){
+				console.log("left")
 				if(dudeCol > 0) dudeCol--
-				break;
-			case 39:
-			case 100:
-				// console.log("right")
+				moved = true
+			}
+			
+			if(  !moved && axes[0] == 1 ){
+				console.log("right")
 				if(dudeCol < mapCols-1) dudeCol++
-				break;
-			case 38:
-			case 119:
-				// console.log("up")
-				if(dudeRow > 0) dudeRow--	
-				break;
-		}
+				moved = true
+			}
+			if(  !moved && axes[1] == -1 ){
+				console.log("up")
+				if(dudeRow > 0) dudeRow--
+				moved = true
+			}
 		
-		
-		// let id ="r"+row+"c"+col
-		// let cell_offset = map.getCell(id).offset()
+		document.getElementById('dude').scrollIntoView({
+			behavior: 'smooth',
+			block: 'center',
+			inline: 'center'
+		});
 		
 		dude.setPosition(dudeCol,dudeRow)
 	}
+}
+
+
+// $(document).on('keypress', async function (e) {
+	// let is_free = false
+	// let dudeRow = dude.row
+	// let dudeCol = dude.col
+	// if(dude.listening){
+		
+		// switch(e.which){
+			// case 40:
+			// case 115:
+				console.log("down")
+				// if(dudeRow < mapRows-1 ) dudeRow++
+				
+				// break;
+			// case 37:
+			// case 97:
+				console.log("left")
+				// if(dudeCol > 0) dudeCol--
+				// break;
+			// case 39:
+			// case 100:
+				console.log("right")
+				// if(dudeCol < mapCols-1) dudeCol++
+				// break;
+			// case 38:
+			// case 119:
+				console.log("up")
+				// if(dudeRow > 0) dudeRow--	
+				// break;
+		// }
+		// document.getElementById('dude').scrollIntoView({
+            // behavior: 'smooth',
+            // block: 'center',
+            // inline: 'center'
+        // });
+		
+		// dude.setPosition(dudeCol,dudeRow)
+	// }
 	
-});
+// });

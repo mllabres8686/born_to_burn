@@ -8,14 +8,14 @@ class Police {
 	posX = 0
 	posY = 0
 	htmlElement = null
-	movementTime = 50
+	movementTime = 750
 	life = false
-	loops = 0
-	max_life = 0
 	last_dir = null
 	target_cell = null
 	direction = null
 	lights = null
+	lights_on = false
+	mode = "random"
 	self = this
 	
 	
@@ -32,17 +32,88 @@ class Police {
 		this.row = row
 		let cell_id ="r"+row+"c"+col
 		let cell_offset = map.getCell(cell_id).offset()
+		this.home = {
+			row:row,
+			col:col
+		}
 		this.posX = cell_offset.top
 		this.posY = cell_offset.left
 		this.htmlElement.offset(cell_offset)
 		
 		// this.movementTime = Math.floor(Math.random() * (300 - 150 + 1) + 150)
-		this.movementTime = Math.floor(Math.random() * (600 - 400 + 1) + 400)
+		// this.movementTime = Math.floor(Math.random() * (600 - 400 + 1) + 400) + 250
+		// this.movementTime = 550
 		
 		// setTimeout(this.live.bind(this), 555500)
 	}
 	
+	setActionTime(time){
+		this.movementTime = time
+	}
 	
+	getActionTime(){
+		return this.movementTime
+	}
+	
+	scanRadiusCells(n){
+		map.cleanScannedCells()
+		let min_row = this.row - n
+		let min_col = this.col - n
+		let diameter = n * 2 + 1
+		let row_limit = min_row + diameter
+		let col_limit = min_col + diameter
+		let enter_into_hunter_mode = false
+		for(let r = min_row; r < row_limit ; r++){
+			for(let c = min_col; c < col_limit ; c++){
+				// console.log("row " + r + " col " + c)
+				if(r >= 0 && r < map.rows && c >= 0 && c < map.cols){
+					if(map.checkCellIsFree(r, c)){
+						//TODO revisar si DUDE o FOLOWERS tienen ROW+COL iguales
+						if(this.scanCell(r,c) == true){
+							console.log("HUNTER MODE!!!!!")
+							map.cleanScannedCells()
+							this.mode = "hunting"
+							
+							return
+						}
+						
+					}
+					// let id ="r"+r+"c"+c
+					// map.getCell(id)
+				}
+			}
+		}
+	}
+	
+	scanCell(r, c){
+		//TODO revisar si DUDE o FOLOWERS tienen ROW+COL iguales
+		// console.log(dude.row == r, dude.col == c)
+		if(dude.row == r && dude.col == c){
+			// console.log("DUDE IN RANGE")
+			return true
+		}
+		for(let follower in dude.followers){
+			if(follower.row == r && follower.col == c){
+				return true
+			}
+		}
+	}
+	
+	scanCellDude(r, c){
+		//TODO revisar si DUDE o FOLOWERS tienen ROW+COL iguales
+		if(dude.row == r && dude.col == c){
+			return true
+		}
+	}
+	
+	scanCellFollowers(r, c){
+		//TODO revisar si DUDE o FOLOWERS tienen ROW+COL iguales
+		for(let follower in dude.followers){
+			if(follower.row == r && follower.col == c){
+				return true
+			}
+		}
+	}
 	
 	setPosition(col, row){
 		this.col = col
@@ -54,29 +125,37 @@ class Police {
 	}
 	
 	move(cell_offset){
-		this.htmlElement.animate(cell_offset, this.movementTime)
+		this.htmlElement.animate(cell_offset, this.movementTime- 10)
 		this.posX = cell_offset.top
 		this.posY = cell_offset.left
 	}
 	
 
 	live(){
-		// let m = this
-		this.lightsOn()
-		this.life = window.setInterval(function() {
-			this.loops++
-			
-			let dude_cell = {
-				row:dude.row,
-				col:dude.col
+		this.life = window.setInterval(function() {			
+			if(this.mode == "hunting"){
+				map.cleanScannedCells()
+				let dude_cell = {
+					row:dude.row,
+					col:dude.col
+				}
+				map.setTargetCell(dude_cell)
+				
+				this.smartMove()
+				this.lightsOn()
 			}
-			map.setTargetCell(dude_cell)
-			this.smartMove()
-			// this.randomMove()
-
 			
-
-		}.bind(this), this.movementTime +100)
+			else if(this.mode == "home"){
+				map.setTargetCell(this.home)
+				this.smartMove()
+			}
+			
+			else{
+				this.scanRadiusCells(2)
+				this.randomMove()
+				// this.scanRadiusCells(2)
+			}
+		}.bind(this), this.getActionTime())
 	}
 	
 	randomMove(){
@@ -125,32 +204,39 @@ class Police {
 		col = this.col
 		row = this.row
 		
+		this.htmlElement[0].classList.remove("right","left","up","down")
 		switch(dir){
 		case 1:
 			if(this.col < mapCols-1){
 				col++
+				this.direction = "right"
 			}
 			break;
 		
 		case 2:
 			if(this.row > 0){
 				row--
+				this.direction = "up"
 			}
 			break;
 		
 		case 3:
 			if(this.row < mapRows-1){
 				row++
+				this.direction = "down"
 			}
 			break;
 		
 		case 4:
 			if(this.col > 0){
 				col--
+				this.direction = "left"
 			}				
 			break;
 			
 		}
+		this.htmlElement.addClass(this.direction)
+
 		this.setPosition(col,row)
 	}
 	
@@ -313,28 +399,32 @@ class Police {
 		this.htmlElement.addClass(this.direction)
 
 		this.setPosition(col,row)
-		let id = "r"+row+"c"+col
-		let police_cell = map.getCell(id)
 		//la proxima posicion del poli
 		// $("#dummy_circle").offset(police_cell.offset())
+		
 		//luces del poli
-		let lights_container = this.lights.parent()
-		let negative_left_margin = lights_container.width()/2
-		let negative_top_margin = lights_container.height()/2
-		
-		let offset = police_cell.offset()
-		let definitive_top = offset.top - negative_top_margin + police_cell.height()/2
-		let definitive_left = offset.left - negative_left_margin + police_cell.width()/2
+		// let id = "r"+row+"c"+col
+		// let police_cell = map.getCell(id)
 		
 		
-		this.lights.parent().animate({top:definitive_top, left:definitive_left}, this.movementTime)
+		// let lights_container = this.lights.parent()
+		// let negative_left_margin = lights_container.width()/2
+		// let negative_top_margin = lights_container.height()/2
+		
+		// let offset = police_cell.offset()
+		// let definitive_top = offset.top - negative_top_margin + police_cell.height()/2
+		// let definitive_left = offset.left - negative_left_margin + police_cell.width()/2
+		
+		
+		// this.lights.parent().animate({top:definitive_top, left:definitive_left}, this.movementTime)
 		
 		
 		
 	}
 
 	lightsOn(){
-		window.setInterval(function() {
+		
+		// window.setInterval(function() {
 			
 			// let lights = $("#police_lights_"+this.)
 			// let lights = $("#police_lights_"+this.)
@@ -348,7 +438,22 @@ class Police {
 				this.lights.addClass("blue")
 				this.lights[0].classList.remove("red")
 			}
-		}.bind(this), 2000)
+			
+			let id = "r"+this.row+"c"+this.col
+			let police_cell = map.getCell(id)
+			
+			
+			let lights_container = this.lights.parent()
+			let negative_left_margin = lights_container.width()/2
+			let negative_top_margin = lights_container.height()/2
+			
+			let offset = police_cell.offset()
+			let definitive_top = offset.top - negative_top_margin + police_cell.height()/2
+			let definitive_left = offset.left - negative_left_margin + police_cell.width()/2
+			
+			
+			this.lights.parent().animate({top:definitive_top, left:definitive_left}, this.getActionTime())
+		// }.bind(this), 2000)
 		
 	}
 }

@@ -8,12 +8,43 @@
 		<link rel="stylesheet" href="css/styles.css">
 	</head>
 	<body>
-		
-		<div id="keyboard_listener"></div>
+		<div id="nav" class="gui">
+			<span>Followers:<span id="followers_recount"></span></span>
+			<span>Polis:<span id="cops_recount"></span></span>
+			<span>Siguiendote:<span id="searching_recount"></span></span>
+			<span>Edificios:<span id="buildings_recount"></span></span>
+			<span>Puntos:<span id="points_recount"></span></span>
+		</div>
+		<div id="right-menu" class="gui">
+			<div id="keyboard_listener"></div>
+			<div id="gamepad"></div>
+			<!-- <div id="gamepad_listener"> -->
+				<!-- <p id="left-ver"></p> -->
+				<!-- <p id="left-hor"></p> -->
+				<!-- <p id="right-ver"></p> -->
+				<!-- <p id="right-hor"></p> -->
+			<!-- </div> -->
+			
+			<div id="zoom-level"></div>
+			<button id="zoomin" class="button">Zoom in</button>
+			<button id="zoomout" class="button">Zoom out</button>
+			<span>
+				<span>DUDE:</span></br>
+				<span>col: <span id="dude_position_x"></span></span></br>
+				<span>row: <span id="dude_position_y"></span></span></br>
+				</br>
+				<span>COP 1:</span></br>
+				<span>col: <span id="cop_position_x"></span></span></br>
+				<span>row: <span id="cop_position_y"></span></span></br>
+				<span>vel: <span id="cop_velocity"></span></span></br>
+			</span>
+		</div>
 		<!-- <div id="dummy_circle"></div> -->
 		<!-- <div id="circle"></div> -->
 		<div id="map"></div>
 		<div id="dude"></div>
+		<div id="sagrada"></div>
+		<div id="agbar"></div>
 		<!-- <div id="dummy_1"></div> -->
 		<!-- <div id="dummy_2"></div> -->
 		<!-- <div id="dummy_3"></div> -->

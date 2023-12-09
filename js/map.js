@@ -7,6 +7,7 @@ class Map {
 	cells = []
 	buildings = []
 	target_cell = null
+	starting_cell = null
 	
 	
 	constructor(id, rows, cols){
@@ -57,12 +58,27 @@ class Map {
 		}
 		
 		// console.log(this.cells.filter(cell => cell[0].id == "r1c1")[0].offset())
-		
+		// let sagrada_offset = this.getCell("#r17c6").offset()
+		// $("#sagrada").offset(sagrada_offset)
 	}
 	
 	/**Return a cell filtered by ID */
 	getCell(id){
 		return this.cells.filter(cell => cell[0].id == id)[0]
+	}
+	
+	checkCellIsFree(row, col){
+		let id ="r"+row+"c"+col
+		let found_cell =  this.cells.filter(cell => cell[0].id == id)[0]
+		if(found_cell[0].classList[1] == "free"){
+			$("#"+id).addClass("scan")
+			return true
+		}
+		return false
+	}
+	
+	cleanScannedCells(){
+		$(".scan").removeClass("scan")
 	}
 	
 	setTargetCell(cell){

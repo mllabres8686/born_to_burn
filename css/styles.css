@@ -1,5 +1,7 @@
 *{
 	box-shadow:inset 0 0 1px 0 black;
+}
+html{
 	font-size: 6px;
 }
 body{
@@ -7,15 +9,36 @@ body{
 	padding:0;
 	display:flex;
 	justify-content:center;
+	position:relative;
+	overflow:hidden;
 	/* font-size: 10px; */
+	scroll-behavior: smooth;
+	position:relative;
+}
+.gui{
+	font-size:12px;
+	background-color:silver;
+
+}
+#right-menu{
+	width: 75px;
+	/* width: 12rem; */
+	height:calc(100vh - 30px);
+	position:fixed;
+	right:0;
+	top:30px;
+	z-index:99;
+}
+
+#right-menu .button{
+	display:block;
 }
 
 #keyboard_listener{
-	width:2.5rem;
-	height:2.5rem;
-	background-color:light-gray;
-	border-radius:100%;
-	position:absolute;
+	width:20px;
+	height:20px;
+	background-color:gray;
+	border-radius:100%;	
 	top:0.75rem;
 	right:0.75rem;
 }
@@ -25,13 +48,44 @@ body{
 #keyboard_listener.off{
 	background-color:red;
 }
+
+#zoom-level{
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#zoomin, #zoomout{
+	height: 30px;
+	width: 75px;
+}
+#nav{
+	display:inline-flex;
+	justify-content:space-between;
+	padding-left:24px;
+	padding-right:24px;
+	position:fixed;
+	height:30px;
+	top:0;
+	left:0;
+	width:100vw;
+	z-index:99;
+	font-size:18px;
+}
+#nav > span{
+	width:130px;
+	align-self: center;
+}
+
 #map{
+	position:absolute;
+	left:0;
 	padding:8rem;
 	background-image: url(../img/gui/prado3.png);
 	background-position: 50%;
 	background-size: 144rem;
 	display:inline-block;
 	opacity:0.9;
+	z-index:1;
 }
 #map .row{
 	display: flex;
@@ -89,6 +143,10 @@ body{
 	background-color: #007b00;
 	box-shadow: inset 0 0 5px 1px #2af200;
 }
+.scan{
+	background-color:red;
+	opacity:0.75!important;
+}
 /* .safe { */
 	/* background-color:blue; */
 /* } */
@@ -105,7 +163,7 @@ body{
 	z-index:2;
 }
 
-.dummy_1{
+.dummy_1, .dummy_2, .dummy_3, .dummy_4, .dummy_5{
 	background-position: 100% center;
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -121,65 +179,25 @@ body{
 .dummy_1.left{background-image: url(../img/dummies/alone1L.png);}
 .dummy_1.right{background-image: url(../img/dummies/alone1R.png);}
 
-.dummy_2{
-	background-position: 100% center;
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 2rem;
-	width: 2rem;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index:1;
-}
+
 .dummy_2.up{background-image: url(../img/dummies/alone2B.png);}
 .dummy_2.down{background-image: url(../img/dummies/alone2.png);}
 .dummy_2.left{background-image: url(../img/dummies/alone2L.png);}
 .dummy_2.right{background-image: url(../img/dummies/alone2R.png);}
 
-.dummy_3{
-	background-position: 100% center;
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 2rem;
-	width: 2rem;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index:1;
-}
+
 .dummy_3.up{background-image: url(../img/dummies/alone3B.png);}
 .dummy_3.down{background-image: url(../img/dummies/alone3.png);}
 .dummy_3.left{background-image: url(../img/dummies/alone3L.png);}
 .dummy_3.right{background-image: url(../img/dummies/alone3R.png);}
 
-.dummy_4{
-	background-position: 100% center;
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 2rem;
-	width: 2rem;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index:1;
-}
+
 .dummy_4.up{background-image: url(../img/dummies/alone4B.png);}
 .dummy_4.down{background-image: url(../img/dummies/alone4.png);}
 .dummy_4.left{background-image: url(../img/dummies/alone4L.png);}
 .dummy_4.right{background-image: url(../img/dummies/alone4R.png);}
 
-.dummy_5{
-	background-position: 100% center;
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 2rem;
-	width: 2rem;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index:1;
-}
+
 .dummy_5.up{background-image: url(../img/dummies/alone5B.png);}
 .dummy_5.down{background-image: url(../img/dummies/alone5.png);}
 .dummy_5.left{background-image: url(../img/dummies/alone5L.png);}
@@ -258,3 +276,43 @@ body{
 	100%{opacity: 0;width:2rem;height:2rem;}
 }
 
+#sagrada{
+	background-image: url(../img/edificios/sagradaObras.png);
+	background-position: 0 0;
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 8.5rem;
+	width: 6em;
+	position: absolute;
+	left: 21.75rem;
+	top: 40rem;
+	z-index:98;
+	
+}
+#sagrada.animate{
+	animation: animation_sagrada 10s infinite;
+	animation-timing-function:step-end;
+}
+@keyframes animation_sagrada{
+	0%{background-position:1px 0}
+	5%{background-position:-97px 0px;}
+	10%{background-position:-195px 0px;}
+	15%{background-position:-293px 0px;}
+	20%{background-position:-391px 0px;}
+	25%{background-position:-489px 0px;}
+	30%{background-position:-587px 0px;}
+	35%{background-position:-685px 0px;}
+	40%{background-position:-783px 0px;}
+	45%{background-position:-881px 0px;}
+	50%{background-position:-979px 0px;}
+	55%{background-position:-1077px 0px;}
+	60%{background-position:-1175px 0px;}
+	65%{background-position:-1273px 0px;}
+	70%{background-position:-1371px 0px;}
+	75%{background-position:-1469px 0px;}
+	80%{background-position:1px 0px;}
+	85%{background-position:1px 0px;}
+	90%{background-position:1px 0px;}
+	95%{background-position:1px 0px;}
+	100%{background-position:1px 0px;}
+}
